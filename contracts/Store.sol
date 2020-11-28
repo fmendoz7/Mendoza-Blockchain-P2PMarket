@@ -44,4 +44,15 @@ contract Store is Ownable {
         require(paused == false, "ERROR: Marketplace is PAUSED");
         _;
     }
+
+    //CONSTRUCTOR
+        //NOTE: Be sure to use memory for string parameters!
+    constructor(address _owner, address _marketplaceAddr, string memory _name) public {
+        // owner = _owner;
+        transferOwnership (_owner);
+        marketplaceAddress = _marketplaceAddr;
+        name = _name;
+        itemIterator = 0;
+    }
+
 }
