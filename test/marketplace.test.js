@@ -65,5 +65,23 @@ contract('Marketplace', (accounts) => {
 
     assert.fail('LOG: Expected revert not received');
   })
+/*---------------------------------------------------------------------------------------------------------------------*/
+  /**
+   * Admins should not be able to remove the owner from the storeOwner mapping. The owner should be like a "super admin"
+   */
+  it('TEST #4: Other admins cannot revoke OWNER admin privileges', async () => {
+    const instance = await Marketplace.deployed();
+
+    try {
+      await instance.addAdmin(bob);
+      await instance.removeAdmin(alice, { from: bob });
+    } catch (error) {
+      const revertFound = error.message.search('revert') >= 0;
+      assert(revertFound, `LOG: Expected "revert", got ${error} instead`);
+      return;
+    }
+
+    assert.fail('LOG: Expected revert not received');
+  })
 
 })
