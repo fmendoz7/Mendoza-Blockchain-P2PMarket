@@ -34,5 +34,36 @@ contract('Marketplace', (accounts) => {
     assert.isTrue(addAdmin, 'LOG: bob is admin');
     assert.isFalse(removeAdmin, 'LOG: bob admin privileges revoked');
   })
+/*---------------------------------------------------------------------------------------------------------------------*/   
+  /**
+   * Non-admins should not be able to add addresses to neither the admins nor storeOwners mapping. This test verifies
+   * that non-admins do not have those privileges.
+   */
+  it('TEST #3: Users with non-admin privileges cannot take admin actions nor mod admin fields', async () => {
+    const instance = await Marketplace.deployed();
+
+    //Scenario #1: Malicious regular user (Charlie) cannot add address to admin Bob
+    try {
+      await instance.addAdmin(bob, { from: charlie });
+    } 
+    
+    catch (error) {
+      const revertFound = error.message.search('revert') >= 0;
+      assert(revertFound, `LOG: Expected "revert", got ${error} instead`);
+    }
+
+    //Scenario #2: Malicious regular user (Charlie) cannot add addresses to store owner Bob
+    try {
+      await instance.addStoreOwner(bob, { from: charlie });
+    } 
+    
+    catch (error) {
+      const revertFound = error.message.search('revert') >= 0;
+      assert(revertFound, `LOG: Expected "revert", got ${error} instead`);
+      return;
+    }
+
+    assert.fail('LOG: Expected revert not received');
+  })
 
 })
