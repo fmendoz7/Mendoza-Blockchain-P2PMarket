@@ -22,4 +22,26 @@ contract Store is Ownable {
         bool exists;
     }
 
+    //EVENTS
+    event AddedItem(uint indexed id, string name, uint price, uint quantity);
+    event RemovedItem(uint indexed id);
+    event ChangedPrice(uint indexed id, uint prevPrice, uint price);
+    event BoughtItem(uint indexed id, address indexed buyer, uint quantity);
+    event DeletedStore(address indexed addr, address indexed owner);
+    event WithdrewFunds(address indexed addr, uint amount);
+
+    //MODIFIERS
+    // If item does not exist
+    modifier itemExists(uint _id) {
+        require(items[_id].exists == true, "ERROR: Item does not exist.");
+        _;
+    }
+
+    // If Markeplace contract is paused
+    modifier isNotPaused() {
+        Marketplace m = Marketplace(marketplaceAddress);
+        bool paused = m.paused();
+        require(paused == false, "ERROR: Marketplace is PAUSED");
+        _;
+    }
 }
