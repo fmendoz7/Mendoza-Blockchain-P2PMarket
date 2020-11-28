@@ -57,5 +57,26 @@ contract('Store', (accounts) => {
     assert.isTrue(itemRemoved[1] === '', 'potion was removed')
   })
   /*-----------------------------------------------------------------------------------------------------------------------*/
+  /**
+   * Test that a user can change the price of an item.
+   */
+  it('TEST #3: Change item price successfully', async () => {
+    const priceChange = web3.toWei(42, 'ether');
+    const instance = await Marketplace.deployed();
+    await instance.addStoreOwner(bob);
+    await instance.addStore(storeName, { from: bob });
+
+    const stores = await instance.getStores(bob);
+    const storeInstance = await Store.at(stores[0]);
+    await storeInstance.addItem(itemName, itemPrice, itemQty, { from: bob, to: storeInstance.address });
+    await storeInstance.changePrice(0, priceChange, { from: bob, to: storeInstance.address });
+
+    const item = await storeInstance.items(0);
+    // web3.fromWei() returns a string
+    const priceInEther = web3.fromWei(item[2], 'ether');
+    
+    assert.isTrue(priceInEther === '42', 'changed price')
+  })
+  /*-----------------------------------------------------------------------------------------------------------------------*/
 
 })
