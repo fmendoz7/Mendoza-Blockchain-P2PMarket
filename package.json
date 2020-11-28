@@ -5,6 +5,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^2.5.1",
     "bignumber.js": "^7.2.1",
+    "create-react-app": "^4.0.1",
     "history": "^4.7.2",
     "lodash": "^4.17.15",
     "react": "^16.4.1",
