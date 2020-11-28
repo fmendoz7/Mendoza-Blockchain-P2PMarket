@@ -18,5 +18,21 @@ contract('Marketplace', (accounts) => {
     assert.isTrue(result, 'LOG: alice is admin');
     assert.isTrue(marketplaceOwner === alice, 'LOG: alice is marketplace owner')
   })
+  /*---------------------------------------------------------------------------------------------------------------------*/
+  /**
+   * This test should try adding a user as an admin and then removing that user from admin.
+   */
+  it('TEST #2: Successfully add and revoke an admin user', async () => {
+    const instance = await Marketplace.deployed();
+
+    await instance.addAdmin(bob);
+    const addAdmin = await instance.admins(bob);
+
+    await instance.removeAdmin(bob);
+    const removeAdmin = await instance.admins(bob);
+
+    assert.isTrue(addAdmin, 'LOG: bob is admin');
+    assert.isFalse(removeAdmin, 'LOG: bob admin privileges revoked');
+  })
 
 })
