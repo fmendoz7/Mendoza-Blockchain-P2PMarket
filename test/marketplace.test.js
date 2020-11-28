@@ -7,9 +7,7 @@ contract('Marketplace', (accounts) => {
   const bob = accounts[1];
   const charlie = accounts[2];
 
-  /**
-   * The address that deploys the Marketplace contract should become the owner of the contract and an admin.
-   */
+  /*---------------------------------------------------------------------------------------------------------------------*/
   it('TEST #1: Instantiate user as admin and owner of the marketplace', async () => {
     const instance = await Marketplace.deployed();
     const result = await instance.admins(alice);
@@ -19,9 +17,6 @@ contract('Marketplace', (accounts) => {
     assert.isTrue(marketplaceOwner === alice, 'LOG: alice is marketplace owner')
   })
   /*---------------------------------------------------------------------------------------------------------------------*/
-  /**
-   * This test should try adding a user as an admin and then removing that user from admin.
-   */
   it('TEST #2: Successfully add and revoke an admin user', async () => {
     const instance = await Marketplace.deployed();
 
@@ -35,10 +30,6 @@ contract('Marketplace', (accounts) => {
     assert.isFalse(removeAdmin, 'LOG: bob admin privileges revoked');
   })
 /*---------------------------------------------------------------------------------------------------------------------*/   
-  /**
-   * Non-admins should not be able to add addresses to neither the admins nor storeOwners mapping. This test verifies
-   * that non-admins do not have those privileges.
-   */
   it('TEST #3: Users with non-admin privileges cannot take admin actions nor mod admin fields', async () => {
     const instance = await Marketplace.deployed();
 
@@ -66,9 +57,6 @@ contract('Marketplace', (accounts) => {
     assert.fail('LOG: Expected revert not received');
   })
 /*---------------------------------------------------------------------------------------------------------------------*/
-  /**
-   * Admins should not be able to remove the owner from the storeOwner mapping. The owner should be like a "super admin"
-   */
   it('TEST #4: Other admins cannot revoke OWNER admin privileges', async () => {
     const instance = await Marketplace.deployed();
 
@@ -83,5 +71,19 @@ contract('Marketplace', (accounts) => {
 
     assert.fail('LOG: Expected revert not received');
   })
+/*---------------------------------------------------------------------------------------------------------------------*/
+  it('TEST #5: Can add and remove a store owner', async () => {
+    const instance = await Marketplace.deployed();
+
+    await instance.addStoreOwner(bob);
+    const addStoreOwner = await instance.storeOwners(bob);
+
+    await instance.removeStoreOwner(bob);
+    const removeStoreOwner = await instance.storeOwners(bob);
+
+    assert.isTrue(addStoreOwner, 'LOG: bob granted owner privileges');
+    assert.isFalse(removeStoreOwner, 'LOG: bob owner privileges revoked');
+  })
+/*---------------------------------------------------------------------------------------------------------------------*/
 
 })
