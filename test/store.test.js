@@ -78,5 +78,23 @@ contract('Store', (accounts) => {
     assert.isTrue(priceInEther === '42', 'changed price')
   })
   /*-----------------------------------------------------------------------------------------------------------------------*/
+  /**
+   * Test that a user can successfully purchase an item. Validate by checking quantity of item after purchase.
+   */
+  it('TEST #4: Purchase item successfully', async () => {
+    const qtyBuying = 3;
+    const instance = await Marketplace.deployed();
+    await instance.addStoreOwner(charlie);
+    await instance.addStore(storeName, { from: charlie });
 
+    const stores = await instance.getStores(charlie);
+    const storeInstance = await Store.at(stores[0]);
+    await storeInstance.addItem(itemName, itemPrice, itemQty, { from: charlie, to: storeInstance.address });
+    await storeInstance.buyItem(0, qtyBuying, { from: bob, to: storeInstance.address, value: qtyBuying * itemPrice });
+
+    const item = await storeInstance.items(0);
+
+    assert.isTrue(item[3].toNumber() === itemQty - qtyBuying, 'bought item successfully');
+  })
+  
 })
