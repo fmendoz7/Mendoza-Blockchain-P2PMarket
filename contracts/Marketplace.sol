@@ -3,8 +3,10 @@ pragma solidity ^0.5.0;
 import "@openzeppelin/contracts/ownership/Ownable.sol";
 import "@openzeppelin/contracts/lifecycle/Pausable.sol";
 
+import "./Store.sol";
+
 //Utilize Ownable and Pausable libraries from openzeppelin
-contract Marketplace is Ownable, Pauasable {
+contract Marketplace is Ownable, Pausable {
 
     //Address mappings of admins, storeOwners, stores
     mapping(address => bool) public admins;
